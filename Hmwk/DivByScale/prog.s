@@ -1,7 +1,7 @@
-	.global _start:
+	.global _start
 
 _start:
-	mov r2, #22222
+	mov r2, #20
 	mov r3, #5
 	mov r4, #0
 	mov r5, #0
@@ -18,20 +18,26 @@ _divMod:
 _checkScale:
 	cmp r6, #1
 	bgt _scale
-	@ ble ...
+	ble _checkFlag
 _scale:
 	mov r6, #1
 	mul r7, r3, r6
 	mul r9, r7, r8
 	cmp r1, r9
 	bgt _shift
+	ble _adjust
+_adjust:
+	add r0, r0, r6
+	subs r1, r1, r7
+	bge _adjust
+	blt _checkScale
 _shift:
 	mul r6, r6, r8
 	mul r7, r3, r6
 	mul r9, r7, r8
 	cmp r1, r9
 	bgt _shift
-	@ ble
+	ble _adjust
 _checkFlag:
 	cmp r4, #0
 	beq _exit
