@@ -1,9 +1,9 @@
-	.global _start
+	.global main
 
-_start:
-	mov r2, #21    @ a = 111
+main:
+	mov r2, #256    @ a = 111
 	mov r3, #5      @ b = 5
-	mov r4, #1      @ flag for a/b or a%b
+	mov r4, #0      @ flag for a/b or a%b
 	mov r5, #0
 	mov r6, #0
 	mov r7, #0
