@@ -10,19 +10,16 @@ message2: .asciz "Type a divisor: "
 message3: .asciz "The quotient is  %d / %d = %d\n"
 
 .balign 4
+message4: .asiz "The remainder is %d % %d = %d\n"
+
+.balign 4
 scan_pattern: .asciz "%d"
 
 .balign 4
-dividend: .word 0
+divisor_read: .word 0
 
 .balign 4
-divisor: .word 0
-
-.balign 4
-quotient: .word 0
-
-.balign 4
-remainder: .word 0
+return: .word 0
 
 	.text
 
@@ -57,12 +54,9 @@ _end:
 address_of_message1: .word message1
 address_of_message2: .word message2
 address_of_message3: .word message3
+address_of_message4: .word message4
 address_of_scan_pattern: .word scan_pattern
-address_of_dividend: .word dividend
-address_of_divisor: .word divisor
-address_of_quotient: .word quotient
-address_of_remainder: .word remainder
-
+address_of_return: .word return
 
 /* External */
 .global printf
