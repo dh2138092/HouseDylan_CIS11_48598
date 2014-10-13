@@ -12,10 +12,10 @@ message1 : .asciz "Type in a dividend: "
 message2 : .asciz "Type in a divisor: "
 
 .balign 4
-message3 : .asciz "%d divided by %d equals %d with remainder "
+message3 : .asciz "%d divided by %d equals %d "
 
 .balign 4
-message4 : .asciz "%d\n"
+message4 : .asciz "with remainder %d\n"
 
 .balign 4
 scan_pattern : .asciz "%d"
@@ -93,8 +93,6 @@ main:
 	ldr r3, [r0]
 	bl divide
 
-	/* FIX THESE */
-	@mov r4, r7 @ a%b is stored
 	mov r3, r6 @ a/b is stored
 	ldr r2, address_of_divisor_read
 	ldr r2, [r2]
