@@ -45,6 +45,7 @@ end:
 	.global main
 main:
 	push {lr}
+	
 	/* Print "Type a dividend: " */
 	ldr r0, address_of_message1
 	bl printf
