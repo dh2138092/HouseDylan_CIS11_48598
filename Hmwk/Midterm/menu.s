@@ -1,6 +1,6 @@
 .data
-message1 : .asciz "\nWelcome to Dylan House's CIS-11 Midterm!\n\nEnter 1, 2, or 3 to run the correspoing application, or enter 0 to exit the midterm...\n1 - Hourly Wage Calculator\n2 - ISP Bill Calculator\n3 - Fibonacci Sequence\n"
-format :.asciz "%d"
+message1 : .asciz "\nWelcome to Dylan House's CIS-11 Fall 2014 Midterm!\n\nEnter 1, 2, or 3 to run the correspoing application, or enter 0 to exit the midterm...\n1 - Hourly Wage Calculator\n2 - ISP Bill Calculator\n3 - Fibonacci Sequence\n"
+format   : .asciz "%d"
 
 .text
 
