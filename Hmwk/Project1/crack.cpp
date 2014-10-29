@@ -17,7 +17,7 @@ int main(int argc,  char* argv[])
 	aiPos2 = (randomSeed + 462172233) % 7;
 	aiPos3 = (randomSeed + 987427223) % 7;
 
-	cout << aiPos1 << " " << aiPos2 << " " << aiPos3 << "\n\n";
+	cout << aiPos1 << " " << aiPos2 << " " << aiPos3 << "\n\n";  // TEST LINE
 
 	do {
 			correctPosCount = 0;
@@ -26,8 +26,6 @@ int main(int argc,  char* argv[])
 			cin >> userPos1;
 			cin >> userPos2;
 			cin >> userPos3;
-
-			//comparePositions(userPos1, userPos2, userPos3, aiPos1, aiPos2, aiPos3, correctPosCount, wrongPosCount);
 
 			if (userPos1 == aiPos1)
 				correctPosCount++;
