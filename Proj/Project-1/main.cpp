@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 		code1 = (rand() + 3266) % 7;
 		code2 = (rand() + 487809620) % 7;
 		code3 = (rand() + 9811454) % 7;
+		turnNumber = 1;
 
 		cout << code1 << " " << code2 << " " << code3 << "\n\n"; // TEST
 
@@ -42,7 +43,9 @@ int main(int argc, char* argv[])
 
 			cout << "\nCP: " << numCorrect << "\nWP: " << numWrong << "\n\n";
 
-		} while (numCorrect != 3 && numWrong != 0);
+			turnNumber++;
+
+		} while (numCorrect != 3 && numWrong != 0 || turnNumber != 14);
 
 		std::cout << "Play again? (Y or N)   ";
 		cin.ignore(1, '\n');
