@@ -9,36 +9,36 @@ message_playagain: .asciz "Do you want to play again? (Y/N)  "
 format_guesses:    .asciz "%d %d %d"
 format_playagain:  .asciz " %c"
 
+test: .asciz "%d %d %d"
+
 .text
 
 game_main:
 	push {lr}
 	sub sp, sp, #12
 
-	/* TEST BLOCK */
-	mov r4, #1
-	mov r5, #1
-	mov r6, #1
-	/* TEST BLOCK */
+	@ r0 is for printf and scanf
+	@ r1 is user's first guess
+	@ r2 is user's second guess
+	@ r3 is user's third guess
 
-        /* RESET # CORRECT and # INCORRECT FOR THIS TURN */
+	reset_counters:
         mov r9, #0
         mov r10, #0
 
-	/* DISPLAY TURN NUM */
+	display_turn_number:
 	ldr r0, addr_of_message_turn
 	mov r1, r11
 	bl printf
 
 	get_guesses:
-	/* GET 3 GUESSES FROM THE USER */
 	ldr r0, addr_of_format_guesses
 	mov r3, sp
 	add r2, r3, #4
 	add r1, r2, #4
 	bl scanf
 
-	/* LOAD EACH GUESS INTO A REGISTER FOR UPCOMING COMPARISONS */
+	load_guesses:
 	add r1, sp, #8
 	ldr r1, [r1]
 	add r2, sp, #4
@@ -46,26 +46,19 @@ game_main:
 	ldr r3, [sp]
 
 	compare_guesses:
-        /* COMPARE GUESS 1 WITH CODE 1*/
-        /* INCREMENT # CORRECT or # INCORRECT DEPENDING ON CMP */
 	cmp r1, r4
 	addeq r9, #1
 	addne r10, #1
 
-	/* COMPARE GUESS 2 WITH CODE 2*/
-	/* INCREMENT # CORRECT or # INCORRECT DEPENDING ON CMP */
 	cmp r2, r5
 	addeq r9, #1
 	addne r10, #1
 
-        /* COMPARE GUESS 1 WITH CODE 1*/
-        /* INCREMENT # CORRECT or # INCORRECT DEPENDING ON CMP */
 	cmp r3, r6
 	addeq r9, #1
 	addne r10, #1
 
 	display_num_correct:
-	/* DISPLAY # CORRECT and # INCORRECT */
 	ldr r0, addr_of_message_position
 	mov r1, r9
 	mov r2, r10
@@ -74,7 +67,7 @@ game_main:
 	cmp r9, #3
 	addeq r11, r11, #14    /* Add enough to make sure the turn counter is >= 15 to end the round */
 
-	/* INCREMENT TURN COUNTER */
+	increment_turn:
 	add r11, r11, #1
 
 	add sp, sp, #12
@@ -84,45 +77,43 @@ game_main:
 game_initialize:
 	push {lr}
 
-	mov r0, #0
-	mov r1, #0
-	mov r2, #7
-	mov r3, #0 @ code 1
-	mov r4, #0 @ code 2
-	mov r5, #0 @ code 3
-	mov r6, #0 @ guess 1
-	mov r7, #0 @ guess 2
-	mov r8, #0 @ guess 3
+	mov r0, #0                   /* r0 for time(r0) */
+	mov r1, #0                   /* r1 = remainder */
+	mov r2, #7                   /* r2 for randomNum % r2 */
+	@ r3 is reserved for user's guess #3 in game_main
+	mov r4, #0 @ code 1
+	mov r5, #0 @ code 2
+	mov r6, #0 @ code 3
 	mov r9, #0 @ correct counter
 	mov r10, #0 @ incorrect counter
 	mov r11, #1 @ turn counter
 	mov r12, #'Y' @ play again?
 
+	generate_1:
 	bl time
 	bl srand
 	bl rand
 	mov r1, r0, ASR #1
 
 	bl divMod
-	mov r3, r1
-
-	mov r2, #7
-	add r1, #58
-	bl divMod
 	mov r4, r1
 
 	mov r2, #7
-	add r1, #24
+	add r1, #31
 	bl divMod
 	mov r5, r1
 
-	/* TEST BLOCK */
-@	ldr r0, addr_of_message_lose
-@	mov r1, r3
-@	mov r2, r4
-@	mov r3, r5
-@	bl printf
-	/* TEST BLOCK */
+	mov r2, #7
+	add r1, #44
+	bl divMod
+	mov r6, r1
+
+
+	ldr r0, =test
+	mov r1, r4
+	mov r2, r5
+	mov r3, r6
+	bl printf
 
 	pop {pc}
 	mov pc, lr
@@ -144,7 +135,8 @@ play_again:
 	pop {pc}
 	mov pc, lr
 
-	.global main
+
+.global main
 main:
 	push {lr}
 
