@@ -11,20 +11,24 @@ message_win:       .asciz "*************************************************\n**
 message_lose:      .asciz "You lose! The correct code was %d %d %d\n\n"
 message_playagain: .asciz "Do you want to play again? (Y/N)  "
 format_guess:      .asciz "%d"
-format_playagain:  .asciz "%c"
+format_playagain:  .asciz " %c"
+
+format_guess2: .asciz "%d %d %d"
+guess1: .word 0
+guess2: .word 0
+guess3: .word 0
 
 .text
 
 game_main:
 	push {lr}
+	sub sp, sp, #12
 
-	mov r3, #1
+	/* TEST BLOCK */
 	mov r4, #1
 	mov r5, #1
-
-	mov r6, r3
-	mov r7, r4
-	mov r8, r5
+	mov r6, #1
+	/* TEST BLOCK */
 
         /* RESET # CORRECT and # INCORRECT FOR THIS TURN */
         mov r9, #0
@@ -35,80 +39,56 @@ game_main:
 	mov r1, r11
 	bl printf
 
-	/*
-	*
-	*
-	*/
+	get_guesses:
+	/* GET 3 GUESSES FROM THE USER */
+	ldr r0, addr_format_guess2
+	mov r3, sp
+	add r2, r3, #4
+	add r1, r2, #4
+	bl scanf
 
-	/* GET USER GUESS 1 */
-@	ldr r0, addr_of_format_guess
-@	mov r1, sp
-@	bl scanf
-@	ldr r6, [sp]
+	/* LOAD EACH GUESS INTO A REGISTER FOR UPCOMING COMPARISONS */
+	add r1, sp, #8
+	ldr r1, [r1]
+	add r2, sp, #4
+	ldr r2, [r2]
+	ldr r3, [sp]
 
+	compare_guesses:
         /* COMPARE GUESS 1 WITH CODE 1*/
         /* INCREMENT # CORRECT or # INCORRECT DEPENDING ON CMP */
-	cmp r6, r3
+	cmp r1, r4
 	addeq r9, #1
 	addne r10, #1
-
-	/*
-	*
-	*
-	*/
-
-	/* GET USER GUESS 2 */
-@	ldr r0, addr_of_format_guess
-@	mov r1, sp
-@	bl scanf
-@	ldr r7, [sp]
 
 	/* COMPARE GUESS 2 WITH CODE 2*/
 	/* INCREMENT # CORRECT or # INCORRECT DEPENDING ON CMP */
-	cmp r7, r4
+	cmp r2, r5
 	addeq r9, #1
 	addne r10, #1
-
-	/*
-	*
-	*
-	*/
-
-	/* GET USER GUESS 3 */
-@	ldr r0, addr_of_format_guess
-@	mov r1, sp
-@	bl scanf
-@	ldr r8, [sp]
 
         /* COMPARE GUESS 1 WITH CODE 1*/
         /* INCREMENT # CORRECT or # INCORRECT DEPENDING ON CMP */
-	cmp r8, r5
+	cmp r3, r6
 	addeq r9, #1
 	addne r10, #1
 
-	cmp r9, #3
-	beq end
-
-	/*
-
-	*/
-
+	display_num_correct:
 	/* DISPLAY # CORRECT and # INCORRECT */
 	ldr r0, addr_of_message_position
 	mov r1, r9
 	mov r2, r10
 	bl printf
 
+	cmp r9, #3
+	addeq r11, r11, #14
+
 	/* INCREMENT TURN COUNTER */
 	add r11, r11, #1
 
-	mov r11, #20
-
-	pop {lr}
-	bx lr
-
-@	pop {pc}
-@	mov pc, lr
+	add sp, sp, #12
+	pop {pc}
+	mov pc, lr
 
 game_initialize:
 	push {lr}
@@ -153,30 +133,45 @@ game_initialize:
 @	bl printf
 	/* TEST BLOCK */
 
-	pop {lr}
-	bx lr
-@	pop {pc}
-@	mov pc, lr
+@	pop {lr}
+@	bx lr
+	pop {pc}
+	mov pc, lr
 
 play_again:
 	push {lr}
+	sub sp, sp, #4
 
 	ldr r0, addr_of_message_playagain
 	bl printf
 
 	ldr r0, addr_of_format_playagain
+	mov r1, sp
 	bl scanf
 
+	ldr r1, [sp]
+
+	add sp, sp, #4
 	pop {pc}
 	mov pc, lr
+
+win:
+	pop {lr}
+	add sp, sp, #12
+	ldr r0, addr_of_message_win
+	bl printf
+	bl play_again
+	@b end
+
+lose:
+	ldr r0, addr_of_message_lose
+	bl printf
+	bl play_again
+	@b end
 
 	.global main
 main:
 	push {lr}
-@	sub sp, sp, #4
-
-@	ldr r3, addr_of_code
-@	ldr r4, addr_of_guess
 
 	ldr r0, addr_of_message_welcome
 	bl printf
@@ -187,19 +182,18 @@ main:
 		doWhile_r11_lt_15:
 			bl game_main
 		cmp r11, #15
-@		b end
 		blt doWhile_r11_lt_15
 
-@		bl play_again
-@	cmp r1, #'Y'
-@	beq doWhile_r12_eq_Y
-@	cmp r1, #'y'
-@	beq doWhile_r12_eq_Y
-	b end
+		
+		
+		bl play_again
 
+	cmp r1, #'Y'
+	beq doWhile_r12_eq_Y
+	cmp r1, #'y'
+	beq doWhile_r12_eq_Y
 
 end:
-@	add sp, sp, #4
 	pop {pc}
 	mov pc, lr
 
@@ -213,3 +207,8 @@ addr_of_message_lose:      .word message_lose
 addr_of_message_playagain: .word message_playagain
 addr_of_format_guess:      .word format_guess
 addr_of_format_playagain:  .word format_playagain
+
+addr_format_guess2: .word format_guess2
+addr_guess1: .word guess1
+addr_guess2: .word guess2
+addr_guess3: .word guess3
