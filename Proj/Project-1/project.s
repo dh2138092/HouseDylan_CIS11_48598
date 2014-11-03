@@ -1,15 +1,13 @@
 .data
 
-message_welcome:   .asciz "\n\n            M A S T E R M I N D ! ! !\n\nCreated by Dylan House, CIS-11-48598\n\nCrack the numerical code to win!\n\n===============================================\nGAME RULES:\n1. The code is 3 digits long, with each digit\n   being between the numbers 1 thru 7.\n2. You have 14 guesses to crack the code.\n===============================================\n\n"
-message_turn:      .asciz "================================================\n                  Turn %d / 14\n================================================\n"
+message_welcome:   .asciz "\n\n            M A S T E R M I N D ! ! !\n\nCreated by Dylan House, CIS-11-48598\n\nCrack the numerical code to win!\n\n\n***********************************************\n\nGAME RULES:\n\n1. The code is 3 digits long, with each digit\n   being between the numbers 1 thru 7.\n\n2. You have 14 guesses to crack the code.\n\n3. Enter one number at a time.\n\n***********************************************\n\n"
+message_turn:      .asciz "\n\n                  Turn %d / 14\n================================================\n"
 message_position:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
-message_win:       .asciz "*************************************************\n*******************YOU WON!!*********************\n*************************************************\n"
+message_win:       .asciz "*************************************************\n*******************YOU WON!!*********************\n*************************************************\n\n"
 message_lose:      .asciz "You lose! The correct code was %d %d %d\n\n"
 message_playagain: .asciz "Do you want to play again? (Y/N)  "
 format_guesses:    .asciz "%d %d %d"
 format_playagain:  .asciz " %c"
-
-test: .asciz "%d %d %d"
 
 .text
 
@@ -80,7 +78,7 @@ game_initialize:
 	mov r0, #0                   /* r0 for time(r0) */
 	mov r1, #0                   /* r1 = remainder */
 	mov r2, #7                   /* r2 for randomNum % r2 */
-	@ r3 is reserved for user's guess #3 in game_main
+
 	mov r4, #0 @ code 1
 	mov r5, #0 @ code 2
 	mov r6, #0 @ code 3
@@ -89,31 +87,32 @@ game_initialize:
 	mov r11, #1 @ turn counter
 	mov r12, #'Y' @ play again?
 
-	generate_1:
+	mov r0, #0
 	bl time
 	bl srand
 	bl rand
-	mov r1, r0, ASR #1
 
+	generate_1:
+	mov r1, r0, ASR #1
+	mov r2, #7
 	bl divMod
 	mov r4, r1
 
-	mov r2, #7
-	add r1, #31
+	generate_2:
+        mov r1, r0, ASR #2
+	mov r3, #3
+ 	mul r1, r1, r3
+        mov r2, #7
 	bl divMod
 	mov r5, r1
 
-	mov r2, #7
-	add r1, #44
+	generate_3:
+        mov r1, r0, ASR #3
+        mov r3, #4
+        mul r1, r1, r3
+        mov r2, #7
 	bl divMod
 	mov r6, r1
-
-
-	ldr r0, =test
-	mov r1, r4
-	mov r2, r5
-	mov r3, r6
-	bl printf
 
 	pop {pc}
 	mov pc, lr
@@ -159,6 +158,10 @@ main:
 			b game_over
 		lose:
 			ldr r0, addr_of_message_lose
+			/* Prepare to printf secret code */
+		        mov r1, r4
+                	mov r2, r5
+                	mov r3, r6
 			b game_over
 
 	game_over:
