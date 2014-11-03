@@ -15,13 +15,36 @@ format_playagain:  .asciz "%c"
 
 .text
 
-initialize_game:
+game_main:
+	push {lr}
+
+	ldr r0, addr_of_message_turn
+	bl printf
+
+	mov r8, #0
+	mov r9, #0
+
+	
+
+	mov r10, #15
+
+	pop {lr}
+	mov pc, lr
+
+game_initialize:
 	push {lr}
 
 	mov r0, #0
 	mov r1, #0
 	mov r2, #7
 	mov r4, #3
+	mov r5, #0 @ guess 1
+	mov r6, #0 @ guess 2
+	mov r7, #0 @ guess 3
+	mov r8, #0 @ correct counter
+	mov r9, #0 @ incorrect counter
+	mov r10, #0 @ turn counter
+	mov r11, #'Y' @ play again?
 
 	bl time
 	bl srand
@@ -49,8 +72,20 @@ initialize_game:
 	bl printf
 	/* TEST BLOCK */
 
-	pop {lr}
-	bx lr
+	pop {pc}
+	mov pc, lr
+
+play_again:
+	push {lr}
+
+	ldr r0, addr_of_message_playagain
+	bl printf
+
+	ldr r0, addr_of_format_playagain
+	bl scanf
+
+	pop {pc}
+	mov pc, lr
 
 	.global main
 main:
@@ -63,7 +98,22 @@ main:
 	ldr r0, addr_of_message_welcome
 	bl printf
 
-	bl initialize_game
+	doWhile_r12_eq_Y:
+		bl game_initialize
+
+		doWhile_r10_lt_15:
+			bl game_main
+		cmp r10, #15
+		blt doWhile_r10_lt_15
+
+@		bl play_again
+@	cmp r1, #'Y'
+@	beq doWhile_r12_eq_Y
+@	cmp r1, #'y'
+@	beq doWhile_r12_eq_Y
+	bne end
+
+
 
 end:
 	add sp, sp, #12
