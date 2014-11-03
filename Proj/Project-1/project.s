@@ -1,22 +1,13 @@
 .data
 
-.balign 4
-code: .skip 12
-.balign 4
-guess: .skip 12
 message_welcome:   .asciz "\n\n            M A S T E R M I N D ! ! !\n\nCreated by Dylan House, CIS-11-48598\n\nCrack the numerical code to win!\n\n===============================================\nGAME RULES:\n1. The code is 3 digits long, with each digit\n   being between the numbers 1 thru 7.\n2. You have 14 guesses to crack the code.\n===============================================\n\n"
 message_turn:      .asciz "================================================\n                  Turn %d / 14\n================================================\n"
 message_position:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
 message_win:       .asciz "*************************************************\n*******************YOU WON!!*********************\n*************************************************\n"
 message_lose:      .asciz "You lose! The correct code was %d %d %d\n\n"
 message_playagain: .asciz "Do you want to play again? (Y/N)  "
-format_guess:      .asciz "%d"
+format_guesses:    .asciz "%d %d %d"
 format_playagain:  .asciz " %c"
-
-format_guess2: .asciz "%d %d %d"
-guess1: .word 0
-guess2: .word 0
-guess3: .word 0
 
 .text
 
@@ -41,7 +32,7 @@ game_main:
 
 	get_guesses:
 	/* GET 3 GUESSES FROM THE USER */
-	ldr r0, addr_format_guess2
+	ldr r0, addr_of_format_guesses
 	mov r3, sp
 	add r2, r3, #4
 	add r1, r2, #4
@@ -81,7 +72,7 @@ game_main:
 	bl printf
 
 	cmp r9, #3
-	addeq r11, r11, #14
+	addeq r11, r11, #14    /* Add enough to make sure the turn counter is >= 15 to end the round */
 
 	/* INCREMENT TURN COUNTER */
 	add r11, r11, #1
@@ -133,8 +124,6 @@ game_initialize:
 @	bl printf
 	/* TEST BLOCK */
 
-@	pop {lr}
-@	bx lr
 	pop {pc}
 	mov pc, lr
 
@@ -155,20 +144,6 @@ play_again:
 	pop {pc}
 	mov pc, lr
 
-win:
-	pop {lr}
-	add sp, sp, #12
-	ldr r0, addr_of_message_win
-	bl printf
-	bl play_again
-	@b end
-
-lose:
-	ldr r0, addr_of_message_lose
-	bl printf
-	bl play_again
-	@b end
-
 	.global main
 main:
 	push {lr}
@@ -184,31 +159,34 @@ main:
 		cmp r11, #15
 		blt doWhile_r11_lt_15
 
-		
-		
+		cmp r9, #3    /* Use the # correct count to determine if round won or lost */
+		bge win
+		blt lose
+		win:
+			ldr r0, addr_of_message_win
+			b game_over
+		lose:
+			ldr r0, addr_of_message_lose
+			b game_over
+
+	game_over:
+		bl printf
 		bl play_again
 
-	cmp r1, #'Y'
-	beq doWhile_r12_eq_Y
-	cmp r1, #'y'
-	beq doWhile_r12_eq_Y
+		cmp r1, #'Y'
+		beq doWhile_r12_eq_Y
+		cmp r1, #'y'
+		beq doWhile_r12_eq_Y
 
 end:
 	pop {pc}
 	mov pc, lr
 
-addr_of_code:              .word code
-addr_of_guess:             .word guess
 addr_of_message_welcome:   .word message_welcome
 addr_of_message_turn:      .word message_turn
 addr_of_message_position:  .word message_position
 addr_of_message_win:       .word message_win
 addr_of_message_lose:      .word message_lose
 addr_of_message_playagain: .word message_playagain
-addr_of_format_guess:      .word format_guess
+addr_of_format_guesses:    .word format_guesses
 addr_of_format_playagain:  .word format_playagain
-
-addr_format_guess2: .word format_guess2
-addr_guess1: .word guess1
-addr_guess2: .word guess2
-addr_guess3: .word guess3
