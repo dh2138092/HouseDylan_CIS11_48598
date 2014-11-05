@@ -3,7 +3,6 @@
 message: .asciz "Type a number: "
 scan_format : .asciz "%d"
 message2: .asciz "Length of the Hailstone sequence for %d is %d\n\n"
-message3: .asciz "Program runtime: %d\n\n"
 
 .text
 
@@ -45,10 +44,6 @@ main:
     sub sp, sp, #4                  /* make room for 4 bytes in the stack */
                                     /* The stack is already 8 byte aligned */
 
-@	mov r0, #0
-@	bl time
-@	mov r3, r0
-
 	bl start_time
 
     ldr r0, address_of_message      /* first parameter of printf: &message */
@@ -71,14 +66,7 @@ main:
     bl printf
 
 	bl end_time
-
-@	mov r0, #0
-@	bl time
-@	mov r4, r0
-
-@	sub r1, r4, r3
-@	ldr r0, addr_of_msg3
-@	bl printf
+	bl print_time
 
     add sp, sp, #4
     pop {lr}
@@ -87,4 +75,3 @@ main:
 address_of_message: .word message
 address_of_scan_format: .word scan_format
 address_of_message2: .word message2
-addr_of_msg3: .word message3
