@@ -1,28 +1,46 @@
 .data
 
-@msg: .asciz "Start: %d\nStop: %d\nDelta: %d\n\n"
-msg: .asciz "The time: %d\n\n"
+msg: .asciz "Start: %d\nStop: %d\nDelta: %d\n\n"
+@msg: .asciz "The time: %d\n\n"
+start: .word 0
+@stop:  .word 0
+@delta: .word 0
 
 .text
 
-.global main
-main:
+.global start_time
+start_time:
 	push {lr}
 
-@	mov r0, #0
-	bl clock
-@	mov r1, r0
 
-@	mov r0, #0
-@	bl time
-@	mov r2, r0
+	mov r0, #0
+	bl time
+	ldr r2, addr_of_start
+	str r0, [r2]
 
-@	sub r3, r2, r1
+	pop {lr}
+	bx lr
 
-@	ldr r0, addr_of_msg
-@	bl printf
+.global end_time
+end_time:
+	push {lr}
+
+	mov r0, #0
+	bl time
+	mov r3, r0
+	ldr r2, addr_of_start
+	ldr r2, [r2]
+
+	sub r4, r3, r2
+
+	ldr r0, addr_of_msg
+	mov r1, r2
+	mov r2, r3
+	mov r3, r4
+	bl printf
 
 	pop {pc}
 	mov pc, lr
 
 addr_of_msg: .word msg
+addr_of_start: .word start
