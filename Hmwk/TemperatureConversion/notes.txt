@@ -1,0 +1,11 @@
+@ Dylan House
+@ CIS-11-48598
+@ November 14, 2014
+
+Compile notes:
+
+gcc -c main.s
+gcc -c convert.s
+gcc -c divide.s
+gcc main.o convert.o divide.o -o prog
+./prog
