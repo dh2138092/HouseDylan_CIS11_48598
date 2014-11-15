@@ -1,8 +1,3 @@
-.data
-
-message: .asciz "\nEnter a temperature 32 <= F <= 212: "
-scan:    .asciz "%d"
-
 .text
 	.global convertFtoC
 
@@ -23,6 +18,3 @@ convertFtoC:
 
 	pop {pc}
 	mov pc, lr
-
-addr_msg:  .word message
-addr_scan: .word scan
