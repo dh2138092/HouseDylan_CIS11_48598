@@ -1,6 +1,6 @@
 .data
 
-message: .asciz "\n%d F is %d C.\n\n"
+message: .asciz "\n%d F is ~%d C.\n\n"
 
 .text
 
@@ -9,16 +9,10 @@ message: .asciz "\n%d F is %d C.\n\n"
 main:
 	push {lr}
 
-	mov r0, #0
-	mov r1, #0
-	mov r2, #9
-	mov r3, #0
-	mov r4, #0
-
 	bl convertFtoC
 
-	mov r1, r4
-	mov r2, r0
+	mov r1, r4            @ r1 is the user's input in fahrenheit
+	mov r2, r0            @ r0 is the user's input converted to celsius
 	ldr r0, addr_msg
 	bl printf
 
