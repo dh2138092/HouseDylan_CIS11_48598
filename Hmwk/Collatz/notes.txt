@@ -1,0 +1,15 @@
+gcc -c time.s
+gcc -c branch.s
+gcc -c predicate.s
+gcc time.o branch.o -o branch
+gcc time.o predicate.o -o predicate
+./branch
+./predicate
+
+
+Input:      123
+Branch:     10 seconds
+Predicate:  6  seconds
+Delta Time: 4  seconds
+
+Predicating was 1.67 times faster than not.
