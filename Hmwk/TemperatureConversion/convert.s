@@ -1,7 +1,7 @@
 .text
-	.global convertFtoC
+	.global convert_F_to_C
 
-convertFtoC:
+convert_F_to_C:
 	push {lr}
 
 	/* Calculate ((F - 32) * 5), where F is the user's input 32 <= F <= 212 */

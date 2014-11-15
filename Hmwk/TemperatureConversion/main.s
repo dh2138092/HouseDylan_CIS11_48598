@@ -48,7 +48,7 @@ main:
 
 	bl get_input
 
-	bl convertFtoC
+	bl convert_F_to_C
 
 	bl print_result
 
