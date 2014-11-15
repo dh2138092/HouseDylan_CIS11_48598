@@ -12,18 +12,18 @@ get_input:
 
 	/* Get input, but only accept values 32 <= x <= 212 */
         do_while:
-        ldr r0, addr_msg_in
-        bl printf
+        	ldr r0, addr_msg_in
+        	bl printf
 
-        ldr r0, addr_scan
-        mov r1, sp
-        bl scanf
+        	ldr r0, addr_scan
+        	mov r1, sp
+        	bl scanf
 
-        ldr r0, [sp]
-        cmp r0, #32
-        blt do_while
-        cmp r0, #212
-        bgt do_while
+        	ldr r0, [sp]
+        	cmp r0, #32
+        	blt do_while
+        	cmp r0, #212
+        	bgt do_while
 
         mov r4, r0           @ store user input in r4 so that I can print the value at end of main.s
 
