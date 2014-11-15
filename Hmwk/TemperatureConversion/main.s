@@ -26,7 +26,8 @@ get_input:
         	bgt do_while
 
         mov r4, r0           @ since r0 thru r3 are used in another function, we need to save the input
-        		     @ in r4 so that we can print out this value at the end of the program
+        		     @ in r4 so that we don't lose the value. We want to print out this value 
+        		     @ at the end of the program
 
 	add sp, sp, #4
 	pop {pc}
