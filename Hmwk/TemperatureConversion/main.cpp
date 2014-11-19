@@ -6,30 +6,32 @@ void scaleLeft(int&, int&, int&);
 void addSub(int&, int&, int&, int&);
 void scaleRight(int&, int&, int&);
 
-void convertFtoC(int &, int &, int &, int &);
+void convertFtoC(int &, int &, int &);
 
-int main(int argv, char *argc[]) 
+int main(int argv, char *argc[])
 {
 	int r0 = 0,
 		r1 = 0,    // Divisor - ((F - 32) * 5) / r2
 		r2 = 9,    // Dividend - where r2 = 9
 		r4 = 0;    // User input - fahrenheit
 
-	convertFtoC(r0, r1, r2, r4);
+	do {
+		cout << "Enter a temperature 32 <= F <= 212: ";
+		cin >> r0;
+	} while (r0 < 32 || r0 > 212);
+
+	r4 = r0;
+
+	convertFtoC(r0, r1, r2);
 
 	cout << "\n" << r4 << " F is " << r0 << " C.\n\n";
 
 	return 0;
 }
 
-void convertFtoC(int &r0, int &r1, int &r2, int &r4)
+void convertFtoC(int &r0, int &r1, int &r2)
 {
-	do {
-		cout << "Enter a temperature 32 <= F <= 212: ";
-		cin >> r4;
-	} while (r4 < 32 || r4 > 212);
-
-	r1 = (r4 - 32) * 5;
+	r1 = (r0 - 32) * 5;
 
 	divMod(r2, r0, r1);
 }
