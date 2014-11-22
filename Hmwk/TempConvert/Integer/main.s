@@ -4,12 +4,14 @@
 main:
         push {lr}
 
-	mov r0, #80
-	mov r2, r0
-	mov r4, #0
-	ldr r5, =100000000
+	mov r0, #80          @@ r0 = fahrenheit, to be converted to celsius
+	mov r2, r0           @@ r2 = r0, to remember the value to print it later
+	mov r4, #0           @@ r4 = r4++, for the loop
+	ldr r5, =100000000   @@ r5 = number of loops to perform
 
 @       bl getInput
+
+	@@ Loop convertFtoC r5 times to get a measurement of the functions running time
 
 	loop:
         	bl convertFtoC
@@ -28,9 +30,9 @@ exit:
 convertFtoC:
         push {lr}
 
-        sub r0, r0, #32
         ldr r1, =0x8E38F
-        mul r0, r0, r1
+        sub r0, r0, #32      @@ F - 32 = A
+        mul r0, r0, r1       @@ A * 5/9
         mov r0, r0, lsr#20
 
         mov r3, r0
@@ -43,6 +45,7 @@ getInput:
 	sub sp, sp, #4
 
 	@@ Get input, but only accept values 32 <= x <= 212
+
         do_while:
         	ldr r0, =message_in
         	bl printf
