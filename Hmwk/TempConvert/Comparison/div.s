@@ -1,7 +1,7 @@
 .data
 
 fahrenheit: .word 212
-msg: .asciz "\n%d F is %d C\n\n"
+msg: .asciz "\nConverting by divMod...\n\n%d F is %d C\nLooped %d times\n\n"
 
 .text
 convertFtoC:
@@ -29,6 +29,7 @@ print:
 
 	push {lr}
 
+	ldr r3, =50000000
 	mov r2, r0
         ldr r1, =fahrenheit
         ldr r1, [r1]

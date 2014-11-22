@@ -2,7 +2,7 @@
 
 fahrenheit: .word 212
 factor:     .word 0x8e38f
-msg: .asciz "\n%d F is %d C\n\n"
+msg: .asciz "\nConverting by integer multiplication and bit shifting...\n\n%d F is %d C\nLooped %d times\n\n"
 
 .text
 convertFtoC:
@@ -27,6 +27,7 @@ print:
 
 	push {lr}
 
+	ldr r3, =50000000
         ldr r1, =fahrenheit
         ldr r1, [r1]
         ldr r0, =msg
