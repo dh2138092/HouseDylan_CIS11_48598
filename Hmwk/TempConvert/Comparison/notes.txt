@@ -1,0 +1,10 @@
+@@ Compile instructions
+
+gcc -c int.s
+gcc int.o -o int
+
+gcc -c div.s
+gcc -c divMod.s
+gcc div.o divMod.o -o div
+
+time ./int; time ./div
