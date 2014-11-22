@@ -10,14 +10,14 @@ convertFtoC:
 
 	push {lr}
 
-        ldr r1, =fahrenheit
-        ldr r3, =factor
+        ldr r1, =fahrenheit  @@  8 bits
+        ldr r3, =factor      @@ 20 bits, << 20
         ldr r1, [r1]
         ldr r3, [r3]
 
-        sub r1, r1, #32
-        mul r1, r1, r3
-        mov r2, r1, lsr#20
+        sub r1, r1, #32      @@ xBit  8, BP -1
+        mul r1, r1, r3       @@ xBit 28, BP -21
+        mov r2, r1, lsr#20   @@ xBit  8, BP -1
 
 	pop {pc}
 	mov pc, lr
