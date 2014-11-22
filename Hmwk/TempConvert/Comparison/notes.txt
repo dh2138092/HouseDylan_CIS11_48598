@@ -8,3 +8,14 @@ gcc -c divMod.s
 gcc div.o divMod.o -o div
 
 time ./int; time ./div
+
+By integer:
+real    0m3.331s
+user    0m1.750s
+
+By divMod:
+real    0m24.414s
+user    0m14.470s
+
+
+Comparing the real measurements, integer is ~7 times faster than divMod!
