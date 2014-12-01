@@ -1,6 +1,8 @@
+	.text
 	.global main
 	.func main
 main:
+	push {lr}
 	sub sp, sp, #24
 
 	ldr r1, =value1
@@ -17,14 +19,15 @@ main:
 
 	ldr r0, =string
 	vmov r2, r3, d0
-	vstr d1, [sp]
-	vstr d2, [sp, #+8]
+	vstr d1, [sp, #+8]
+	vstr d2, [sp, #+16]
 	bl printf
 
 	add sp, sp, #24
-
-	mov r7, #1
-	swi 0
+	pop {pc}
+	mov pc, lr
+@	mov r7, #1
+@	swi 0
 
 	.data
 value1: .float 1.54321

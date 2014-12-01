@@ -2,17 +2,22 @@
 
 half:             .float 0.5
 rho:              .float 0.00237
-velocity:         .word 200
+velocity:         .float 200
 pi:               .float 3.141592
-radius:           .word 6
+radius:           .float 6
 conv:             .float 0.006944
 dragCoeffecient:  .float 0.4
-message: .asciz "\nFloat Dynamic Pressure = %f lbs\nCross-Sectional Area x 32 = %f ft^2\nFloat Drag x 32 = %f lbs\n\n"
+scalar:           .float 32
+return:           .word 0
+message: .asciz "\nFloat Dynamic Pressure = %f lbs/ft^2\nCross-Sectional Area x 32 = %f ft^2\nFloat Drag x 32 = %f lbs\n\n"
 
 .text
 
 	.global main
 main:
+@	ldr r0, =return
+@	str lr, [r0]
+
 	push {lr}
 	sub sp, sp, #24
 
@@ -54,6 +59,10 @@ main:
 
 	@@ Convert single-precision to double-precision to printf results
 
+	ldr r0, =scalar
+	vldr s14, [r0]
+	vmul.f32 s2, s2, s14
+
 	vcvt.f64.f32 d0, s0
 	vcvt.f64.f32 d1, s2
 	vcvt.f64.f32 d2, s4
@@ -62,12 +71,18 @@ main:
 
 	ldr r0, =message
 	vmov r2, r3, d0
-	vstr d1, [sp]
-	vstr d2, [sp, #+8]
+	vstr d1, [sp, #+4]
+	vstr d2, [sp, #+12]
 	bl printf
 
 	add sp, sp, #24
+
+@	ldr r0, =return
+@	ldr r0, [r0]
+@	bx lr
 	pop {pc}
 
 exit:
 	mov pc, lr
+	@mov r7, #1
+	@swi 0
