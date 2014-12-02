@@ -1,0 +1,17 @@
+@@ Fill an array with temperatures 32 - 212, skipping every 4, ie 32, 36, 30, ... , 212
+@@ r0 = 54, or number of temperatures we will convert (212 / 4 = 54)
+@@ r1 address of array
+
+init_array:
+	push {lr}
+
+	mov r5, #32
+
+	loop:
+		str r5, [r1, r5, lsl #2]
+		add r5, r5, #5
+		cmp r5, #212
+		blt loop
+
+	pop {lr}
+	mov pc, lr
