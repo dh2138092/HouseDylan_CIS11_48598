@@ -1,34 +1,48 @@
 .data
 
-.align 4
+.align 8
 fahrenheit_array:
-.skip 184
+.skip 368
 
-.align 4
+.align 8
 celcius_array:
-.skip 184
+.skip 368
 
-factor:     .word 0x8e38f
+factor:     .float 32.0
+factor2:    .float 0.555555
+start:      .float 32.0
+pointer:    .float 0.0
+increment:  .float 1.0
+add4:       .float 4.0
+
 
 .align 4
-msg: .asciz "%d fahrenheit is %d celcius\n"
+msg: .asciz "%f fahrenheit is %f celcius\n"
 
 .text
 init_array:
-	push {r4, r5, lr}
+	push {lr}
 
-	mov r4, #0      @@ Array address incrementer
-	mov r5, #32     @@ Starting temperature
+	mov r2, #0
+	ldr r3, =pointer
+	ldr r4, =increment
+	ldr r5, =add4
+	ldr r6, =start
+	vldr s13, [r3]
+	vldr s14, [r4]
+	vldr s15, [r5]
+	vldr s16, [r6]
 
 	loop:
-		str r5, [r1, r4, lsl #2]
-		add r4, r4, #1
-		add r5, r5, #4
+		str s16, [s1, s13, lsl #3]
 
-		cmp r4, r0
+		vadd.f32 s13, s13, s14 
+		vadd.f32 s16, s16, s15
+		add r2, r2, #1
+		cmp r2, r0
 		ble loop
 
-	pop {r4, r5, lr}
+	pop {lr}
 	bx lr
 
 convert:
@@ -102,18 +116,18 @@ main:
 	push {r4, lr}
 
 	mov r0, #45                    /* first_parameter: highest temperature */
-	ldr r1, addr_fahrenheit_array   /* second parameter: address of the array */
+	vldr s1, =fahrenheit_array   /* second parameter: address of the array */
 	bl init_array
 
 	mov r0, #45
-	ldr r1, addr_fahrenheit_array
-	ldr r2, addr_celcius_array
-	bl fill_celcius
+	ldr r1, =fahrenheit_array
+	ldr r2, =celcius_array
+	@bl fill_celcius
 
 	mov r0, #45
-	ldr r1, addr_fahrenheit_array
-	ldr r2, addr_celcius_array
-	bl print_each_item
+	ldr r1, =fahrenheit_array
+	ldr r2, =celcius_array
+	@bl print_each_item
 
 	pop {r4, lr}
 	bx lr
