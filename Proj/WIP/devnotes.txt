@@ -1,0 +1,7 @@
+Need to add:
+	Array of codes
+	Array of guesses
+	Float value of avg correct
+		Print this value at end of game
+	Float value of avg wrong
+		Print this value at end of game

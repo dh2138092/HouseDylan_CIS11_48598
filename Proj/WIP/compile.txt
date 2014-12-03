@@ -1,0 +1,1 @@
+gcc -c project.s; gcc -c game_initialize.s; gcc -c game_main.s; gcc -c play_again.s; gcc -c division.s; gcc project.o game_initialize.o game_main.o play_again.o division.o -o project
