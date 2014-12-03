@@ -20,9 +20,13 @@ game_main:
 
 	display_turn_number:
 	ldr r0, addr_of_message_turn
-	mov r1, r11
+	mov r1, r11			@@ r11 <- turn number, see game_init.s
 	bl printf
 
+	get_gusses:
+		ldr r6, =guesses	@@ Load guess array
+
+/*
 	get_guesses:
 	ldr r0, addr_of_format_guesses
 	mov r3, sp
@@ -50,6 +54,7 @@ game_main:
 	addeq r9, #1
 	addne r10, #1
 
+*/
 	display_num_correct:
 	ldr r0, addr_of_message_position
 	mov r1, r9
