@@ -1,11 +1,12 @@
+	.data
 .align 4
 codes: .skip 16
 
 .align 4
 gusses: .skip 16
 
-.text
-.global game_initialize
+	.text
+	.global game_initialize
 game_initialize:
 	push {lr}
 
@@ -13,11 +14,6 @@ game_initialize:
 	mov r1, #0                   /* r1 = remainder */
 	mov r2, #7                   /* r2 for randomNum % r2 */
 
-/*
-	mov r4, #0 @ code 1
-	mov r5, #0 @ code 2
-	mov r6, #0 @ code 3
-*/
 	mov r9, #0 @ correct counter
 	mov r10, #0 @ incorrect counter
 	mov r11, #1 @ turn counter
@@ -39,7 +35,7 @@ game_initialize:
 			mov r3, r3, asr #1
 			mul r1, r1, r3
 			mov r2, #7		@@ Don't want codes > 7
-			bl divmod
+			bl divMod
 			str r1, [r6, r4, lsl #2]
 
 			add r4, r4, #1
@@ -47,28 +43,5 @@ game_initialize:
 				cmp r4, #3
 				ble init_loop
 
-/*
-	generate_1:
-	mov r1, r0, ASR #1
-	mov r2, #7
-	bl divMod
-	mov r4, r1
-
-	generate_2:
-        mov r1, r0, ASR #2
-	mov r3, #3
- 	mul r1, r1, r3
-        mov r2, #7
-	bl divMod
-	mov r5, r1
-
-	generate_3:
-        mov r1, r0, ASR #3
-        mov r3, #4
-        mul r1, r1, r3
-        mov r2, #7
-	bl divMod
-	mov r6, r1
-*/
 	pop {pc}
 	mov pc, lr
