@@ -1,35 +1,15 @@
 	.data
 message_turn:      .asciz "\n\n                  Turn %d / 14\n================================================\n"
 message_position:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
-guessFormat: .asciz "%d"
-
-print: .asciz "%d\n"
-
-.align 4
-arrayOfGuesses: .skip 16
-
-.align 4
-numberGuessedCorrectly: .word 0
-
-.align 4
-numberGuessedIncorrectly: .word 0
-
-.align 4
-turnCounter: .word 1
-
-restartGame: .asciz " %c"
-
 
 	.text
 	.global game_main
 game_main:
 	push {lr}
 
-	@@ r5 <- arrayOfCodes from game_init.s
-
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	@@ Reset number correct & incorrect counters every turn @@
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@@ Reset number correct & incorrect variables every turn @@
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 	reset_counters:
 		mov r0, #0
@@ -85,10 +65,8 @@ game_main:
 	mov r2, #0		@@ Guessed incorrecty counter
 	mov r3, #0		@@ Holds value of arrayOfCodes[i]
 	mov r4, #0		@@ Holds value of arrayOfGuesses[i]
-	@@ r5 <- =arrayOfCodes from game_init.s
+	ldr r5, =arrayOfCodes
 	ldr r6, =arrayOfGuesses
-	ldr r7, =numberGuessedCorrectly
-	ldr r8, =numberGuessedIncorrectly
 	compare_guesses:
 		ldr r3, [r5, r0, lsl #2]
 		ldr r4, [r6, r0, lsl #2]
@@ -96,20 +74,20 @@ game_main:
 		cmp r3, r4
 		addeq r1, #1
 		addne r2, #1
-		str r1, [r7]
-		str r2, [r8]
-
-			@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-			@@ End current game if guessed correctly >= 3 @@
-			@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@			cmp r7, #3
-@			bge end_game
 
 		add r0, r0, #1
 		compare_compare:
 			cmp r0, #3
-			ble compare_guesses
+			blt compare_guesses
+
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@@ Set guessed correct & incorrect variables @@
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+	ldr r3, =numberGuessedCorrectly
+	ldr r4, =numberGuessedIncorrectly
+	str r1, [r3]
+	str r2, [r4]
 
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	@@ Display # of guesses that are correct & incorrect @@
@@ -117,10 +95,6 @@ game_main:
 
 	display_num_correct:
 		ldr r0, addr_of_message_position
-		ldr r1, [r7]
-		ldr r2, [r8]
-@		mov r1, #38
-@		mov r2, #83
 		bl printf
 
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -133,7 +107,6 @@ game_main:
 		add r0, r0, #1
 		str r0, [r1]
 
-end_game:
 	pop {pc}
 	mov pc, lr
 
