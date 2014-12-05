@@ -9,26 +9,29 @@ format: .asciz "%d"
 
 main:
 	push {lr}
-	sub sp, sp, #4
 
+	@ r0 <- format
 	mov r4, #0
-	ldr r2, =test
+	ldr r5, =test
 	doWhile:
-		ldr r0, =format
-		ldr r1, [r2, r4, lsl #2]
-		bl scanf
-		str 
+		sub sp, sp, #4
 
+		ldr r0, =format
+		mov r1, sp
+		bl scanf
+
+		ldr r0, [sp]
+		str r0, [r5, r4, lsl #2]
+
+		ldr r1, [r5, r4, lsl #2]
 		ldr r0, =print
-		ldr r1, [r2, r4, lsl #2]
-		ldr r1, [r1]
 		bl printf
+
+		add sp, sp, #4
 
 		add r4, r4, #1
 		cmp r4, #3
 		blt doWhile
-
-	add sp, sp, #4
 
 	pop {pc}
 	mov pc, lr

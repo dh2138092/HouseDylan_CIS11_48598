@@ -1,7 +1,7 @@
 	.data
 message_turn:      .asciz "\n\n                  Turn %d / 14\n================================================\n"
 message_position:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
-format_guess: .asciz "%d"
+guessFormat: .asciz "%d"
 
 .align 4
 arrayOfGuesses: .skip 16
@@ -22,7 +22,6 @@ restartGame: .asciz " %c"
 	.global game_main
 game_main:
 	push {lr}
-	sub sp, sp, #4
 
 	@@ r5 <- arrayOfCodes from game_init.s
 
@@ -51,13 +50,20 @@ game_main:
 	@@ Get 3 guesses from the user @@
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr r0, =format_guess
+	ldr r2, =arrayOfGuesses
 	mov r4, #0
 	b get_compare
 	get_guesses:
-		ldr r2, =arrayOfGuesses
-		str sp, [r2, r4, lsl #2]
+		sub sp, sp, #4
+
+		ldr r0, =guessFormat
+		mov r1, sp
 		bl scanf
+
+		ldr r0, [sp]
+		str r0, [r2, r4, lsl #2]
+
+		add sp, sp, #4
 
 		add r4, r4, #1
 		get_compare:
@@ -120,8 +126,6 @@ game_main:
 		str r0, [r1]
 
 end_game:
-	add sp, sp, #4
-
 	pop {pc}
 	mov pc, lr
 
