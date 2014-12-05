@@ -12,7 +12,7 @@ main:
 	bl printf
 
 	doWhile_r12_eq_Y:
-		bl game_initialize
+		bl init
 
 		doWhile_r11_lt_15:
 			bl game_main

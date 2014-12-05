@@ -3,6 +3,8 @@ message_turn:      .asciz "\n\n                  Turn %d / 14\n=================
 message_position:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
 guessFormat: .asciz "%d"
 
+print: .asciz "%d\n"
+
 .align 4
 arrayOfGuesses: .skip 16
 
@@ -13,7 +15,7 @@ numberGuessedCorrectly: .word 0
 numberGuessedIncorrectly: .word 0
 
 .align 4
-turnCounter: .word 0
+turnCounter: .word 1
 
 restartGame: .asciz " %c"
 
@@ -50,7 +52,6 @@ game_main:
 	@@ Get 3 guesses from the user @@
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-	ldr r2, =arrayOfGuesses
 	mov r4, #0
 	b get_compare
 	get_guesses:
@@ -60,15 +61,20 @@ game_main:
 		mov r1, sp
 		bl scanf
 
-		ldr r0, [sp]
-		str r0, [r2, r4, lsl #2]
+		ldr r0, =arrayOfGuesses
+		ldr r1, [sp]
+		str r1, [r0, r4, lsl #2]
+
+		ldr r1, [r0, r4, lsl #2]
+                ldr r0, =print
+                bl printf
 
 		add sp, sp, #4
 
 		add r4, r4, #1
 		get_compare:
 			cmp r4, #3
-			ble get_guesses
+			blt get_guesses
 
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	@@ Compare user guesses to the 3 randomly generated codes @@
@@ -97,8 +103,8 @@ game_main:
 			@@ End current game if guessed correctly >= 3 @@
 			@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-			cmp r7, #3
-			bge end_game
+@			cmp r7, #3
+@			bge end_game
 
 		add r0, r0, #1
 		compare_compare:
@@ -113,6 +119,8 @@ game_main:
 		ldr r0, addr_of_message_position
 		ldr r1, [r7]
 		ldr r2, [r8]
+@		mov r1, #38
+@		mov r2, #83
 		bl printf
 
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
