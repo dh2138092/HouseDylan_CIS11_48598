@@ -1,9 +1,20 @@
 	.data
 .align 4
-codes: .skip 16
+arrayOfCodes: .skip 16
 
 .align 4
-gusses: .skip 16
+arrayOfGuesses: .skip 16
+
+.align 4
+numberGuessedCorrectly: .word 0
+
+.align 4
+numberGuessedIncorrectly: .word 0
+
+.align 4
+turnCounter: .word 0
+
+restartGame: .asciz " %c"
 
 	.text
 	.global game_initialize
@@ -14,12 +25,6 @@ game_initialize:
 	mov r1, #0                   /* r1 = remainder */
 	mov r2, #7                   /* r2 for randomNum % r2 */
 
-	mov r9, #0 @ correct counter
-	mov r10, #0 @ incorrect counter
-	mov r11, #1 @ turn counter
-	mov r12, #'Y' @ play again?
-
-	mov r0, #0
 	bl time		@@ time(r0)
 	bl srand	@@ Seed random num generator
 	bl rand		@@ r0 <- Random num
@@ -27,7 +32,7 @@ game_initialize:
 	@@ Fill codes array with 3 random digits each 0 < x < 8
 	init_codes:
 		ldr r6, =codes		@@ Array of 3 codes
-		mov r3, #2
+		mov r3, #2		@@ Random scalar
 		mov r4, #0		@@ Memory address pointer
 
 		b init_compare
@@ -42,6 +47,8 @@ game_initialize:
 			init_compare:
 				cmp r4, #3
 				ble init_loop
+
+	ldr r5, r6	@@ r5 <- arrayOfCodes
 
 	pop {pc}
 	mov pc, lr
