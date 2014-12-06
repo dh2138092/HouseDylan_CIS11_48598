@@ -1,1 +1,3 @@
-gcc -c division.s; gcc -c askToPlayAgain.s; gcc -c initialize.s; gcc -c main.s; gcc -c turn.s; gcc division.o askToPlayAgain.o initialize.o main.o turn.o -o game
+@@ Open in Vim and copy/paste this into cmd line to compile and run the game
+
+gcc -c division.s; gcc -c askToPlayAgain.s; gcc -c initialize.s; gcc -c main.s; gcc -c turn.s; gcc division.o askToPlayAgain.o initialize.o main.o turn.o -o mastermind; ./mastermind
