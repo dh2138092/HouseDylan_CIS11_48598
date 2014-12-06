@@ -22,6 +22,19 @@ numberGuessedIncorrectly: .word 0
 .align 4
 turnCounter: .word 1
 
+	.global totalGuesses
+.align 4
+totalGuesses: .word 42
+
+	.global totalCorrect
+.align 4
+totalCorrect: .word 0
+.align 4
+printNum: .asciz "%d\n"
+
+.align 4
+randomNum: .word 0
+
 	.text
 	.global initGame
 initGame:
@@ -30,10 +43,10 @@ initGame:
 	mov r0, #0
 	bl time
 	bl srand
-	bl rand
 
 	bl fillCodeArray
 	bl initTurnCounter
+	bl initTotalCorrect
 	bl testPrint
 
 	pop {pc}
@@ -44,14 +57,15 @@ fillCodeArray:
 
 	ldr r5, =arrayOfCodes
 	mov r4, #0
-
 	generateCode:
-		mov r1, r0, asr #1
-		add r3, r3, #1
-		mul r1, r1, r3
-		mov r2, #8
-		bl divMod			@@ In: r1/r2 @@ Out: r0 <- a/b, r1 <- a%b
-		str r1, [r5, r4, lsl #2]
+		bl rand
+
+		mov r1, r0, asr #1		@@ In case random return is negative
+		mov r2, #8			@@ rand()%8 <- divMod
+
+		bl divMod
+
+		str r1, [r5, r4, lsl #2]	@@ Store random number in code array
 
 		add r4, r4, #1
 		cmp r4, #3
@@ -66,6 +80,16 @@ initTurnCounter:
 	mov r0, #1
         ldr r1, =turnCounter
         str r0, [r1]
+
+	pop {pc}
+	mov pc, lr
+
+initTotalCorrect:
+	push {lr}
+
+	mov r0, #0
+	ldr r1, =totalCorrect
+	str r0, [r1]
 
 	pop {pc}
 	mov pc, lr

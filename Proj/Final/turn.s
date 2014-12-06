@@ -101,14 +101,19 @@ compareGuessWithCode:
 	mov pc, lr
 
 setCorrectAndIncorrectCounters:
-	push {r4, lr}
+	push {r4, r5, lr}
 
 	ldr r3, =numberGuessedCorrectly
 	ldr r4, =numberGuessedIncorrectly
 	str r1, [r3]
 	str r2, [r4]
 
-	pop {r4, lr}
+	ldr r0, =totalCorrect
+	ldr r5, [r0]
+	add r5, r5, r1
+	str r5, [r0]
+
+	pop {r4, r5, lr}
 	mov pc, lr
 
 displayGuessStats:

@@ -2,6 +2,9 @@
 msgWelcome:   .asciz "\n\n            M A S T E R M I N D ! ! !\n\nCreated by Dylan House, CIS-11-48598\n\nCrack the numerical code to win!\n\n\n***********************************************\n\nGAME RULES:\n\n1. The code is 3 digits long, with each digit\n   being between the numbers 0 thru 7.\n\n2. You have 14 guesses to crack the code.\n\n3. Enter one number at a time.\n\n***********************************************\n\n"
 msgWin:       .asciz "*************************************************\n*******************YOU WON!!*********************\n*************************************************\n\n"
 msgLose:      .asciz "You lose! The correct code was %d %d %d\n\n"
+msgAvgCorrect: .asciz "You got an average of %f (percent) correct guesses that game.\n"
+msgPlayAgain: .asciz "Do you want to play again? (Y/N)  "
+fmtPlayAgain: .asciz " %c"
 
 	.text
 	.global main
@@ -43,13 +46,31 @@ main:
 
 	gameOver:
 		bl printf
-		bl askToPlayAgain
+		bl promptNewGame
 
-		cmp r1, #'Y'
-		beq playGame
-		cmp r1, #'y'
-		beq playGame
+	        cmp r0, #'Y'
+	        beq playGame
+	        cmp r0, #'y'
+        	beq playGame
 
-endGame:
+
+exit:
 	pop {r4, pc}
+	mov pc, lr
+
+promptNewGame:
+	push {lr}
+	sub sp, sp, #4
+
+	ldr r0, =msgPlayAgain
+	bl printf
+
+	ldr r0, =fmtPlayAgain
+	mov r1, sp
+	bl scanf
+
+	ldr r0, [sp]
+
+	add sp, sp, #4
+	pop {pc}
 	mov pc, lr

@@ -1,1 +1,1 @@
-gcc -c division.s; gcc -c askToPlayAgain.s; gcc -c init.s; gcc -c main.s; gcc -c turn.s; gcc division.o askToPlayAgain.o init.o main.o turn.o -o game
+gcc -c division.s; gcc -c askToPlayAgain.s; gcc -c initialize.s; gcc -c main.s; gcc -c turn.s; gcc division.o askToPlayAgain.o initialize.o main.o turn.o -o game
