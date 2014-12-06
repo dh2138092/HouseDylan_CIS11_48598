@@ -3,7 +3,7 @@
 guessFormat: .asciz "%d"
 
 	.global print
-print: .asciz "%d\n"
+printCodes: .asciz "%d %d %d\n"
 
 	.global arrayOfCodes
 .align 4
@@ -25,19 +25,12 @@ numberGuessedIncorrectly: .word 0
 .align 4
 turnCounter: .word 1
 
-	.global restartGame
-restartGame: .asciz " %c"
-
 	.text
-	.global init
-init:
+	.global initGame
+initGame:
 	push {lr}
 
-	mov r0, #0                   /* r0 for time(r0) */
-	mov r1, #0                   /* r1 = remainder */
-	mov r2, #7                   /* r2 for randomNum % r2 */
-	mov r3, #1
-
+	mov r0, #0
 	bl time		@@ time(r0)
 	bl srand	@@ Seed random num generator
 	bl rand		@@ r0 <- Random num
@@ -64,18 +57,23 @@ init:
 				cmp r4, #3
 				ble init_loop
 
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@@ Initialize turn counter to 1 @@
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+	mov r0, #1
+        ldr r1, =turnCounter
+        str r0, [r1]
+
+
 	@@ Test section
 
-	mov r4, #0
-	 while:
-		ldr r6, =arrayOfCodes
-		ldr r1, [r6, r4, lsl #2]
-		ldr r0, =print
+                ldr r4, =arrayOfCodes
+                ldr r3, [r4, #8]
+                ldr r2, [r4, #4]
+                ldr r1, [r4, #0]
+                ldr r0, =printCodes
 		bl printf
-
-                add r4, r4, #1
-                cmp r4, #3
-                blt while
 
 	pop {pc}
 	mov pc, lr

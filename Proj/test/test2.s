@@ -1,33 +1,31 @@
 .data
-.align 4
-test: .skip 16
-print: .asciz "%d %d\n"
-format: .asciz "%d"
-
+string: .asciz "Float value: %f\n"
 .text
 .global main
-
 main:
 	push {lr}
 
-	mov r4, #0
-	mov r5, #0
-	mov r6, #0
-	while:
-		mov r0, #1
-		mov r1, #1
-		cmp r0, r1
-		addeq r5, #5
-		addne r6, #10
+	mov r0, #16
+	vmov s0, r0
+	vcvt.f64.u32 d0, s0
 
-		ldr r0, =print
-		mov r1, r5
-		mov r2, r6
-		bl printf
+	ldr r0, =string
+	vmov r2, r3, d0
+	bl printf
 
-		add r4, r4, #1
-		cmp r4, #3
-		blt while
+	mov r0, #46
+	vmov s2, r0
+	vcvt.f64.u32 d2, s2
+
+        ldr r0, =string
+        vmov r2, r3, d2
+        bl printf
+
+	vdiv.f64 d3, d0, d2
+
+	ldr r0, =string
+	vmov r2, r3, d3
+	bl printf
 
 	pop {pc}
 	mov pc, lr

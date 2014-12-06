@@ -3,8 +3,8 @@ message_turn:      .asciz "\n\n                  Turn %d / 14\n=================
 message_position:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
 
 	.text
-	.global game_main
-game_main:
+	.global playTurn
+playTurn:
 	push {lr}
 
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -45,9 +45,9 @@ game_main:
 		ldr r1, [sp]
 		str r1, [r0, r4, lsl #2]
 
-		ldr r1, [r0, r4, lsl #2]
-                ldr r0, =print
-                bl printf
+@		ldr r1, [r0, r4, lsl #2]
+@               ldr r0, =print
+@               bl printf
 
 		add sp, sp, #4
 
@@ -102,10 +102,10 @@ game_main:
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 	increment_turn:
-		ldr r1, =turnCounter
-		ldr r0, [r1]
-		add r0, r0, #1
-		str r0, [r1]
+		ldr r0, =turnCounter
+		ldr r1, [r0]
+		add r1, r1, #1
+		str r1, [r0]
 
 	pop {pc}
 	mov pc, lr

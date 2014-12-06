@@ -1,12 +1,10 @@
-.data
-
+	.data
 message_welcome:   .asciz "\n\n            M A S T E R M I N D ! ! !\n\nCreated by Dylan House, CIS-11-48598\n\nCrack the numerical code to win!\n\n\n***********************************************\n\nGAME RULES:\n\n1. The code is 3 digits long, with each digit\n   being between the numbers 1 thru 7.\n\n2. You have 14 guesses to crack the code.\n\n3. Enter one number at a time.\n\n***********************************************\n\n"
 message_win:       .asciz "*************************************************\n*******************YOU WON!!*********************\n*************************************************\n\n"
 message_lose:      .asciz "You lose! The correct code was %d %d %d\n\n"
 
-.text
-
-.global main
+	.text
+	.global main
 main:
 	push {lr}
 

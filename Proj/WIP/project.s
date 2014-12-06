@@ -11,38 +11,49 @@ main:
 	ldr r0, addr_of_message_welcome
 	bl printf
 
-	doWhile_r12_eq_Y:
-		bl init
+	playGame:
+		bl initGame
 
-		doWhile_r11_lt_15:
-			bl game_main
-		cmp r11, #15
-		blt doWhile_r11_lt_15
+		nextTurn:
+			bl playTurn
 
-		cmp r9, #3    /* Use the # correct count to determine if round won or lost */
-		bge win
-		blt lose
-		win:
-			ldr r0, addr_of_message_win
-			b game_over
-		lose:
-			ldr r0, addr_of_message_lose
-			/* Prepare to printf secret code */
-		        mov r1, r4
-                	mov r2, r5
-                	mov r3, r6
-			b game_over
+			ldr r0, =numberGuessedCorrectly
+			ldr r0, [r0]
+			cmp r0, #3
+			bge gameWon
 
-	game_over:
+			ldr r0, =turnCounter
+			ldr r0, [r0]
+			cmp r0, #15
+			blt nextTurn
+
+			b gameLost
+
+	gameWon:
+		ldr r0, addr_of_message_win
+		b gameOver
+
+	gameLost:
+		ldr r0, addr_of_message_lose
+		ldr r4, =arrayOfCodes
+		ldr r1, [r4, #0]
+		ldr r2, [r4, #4]
+		ldr r3, [r4, #8]
+@	        mov r1, r4
+@              	mov r2, r5
+@              	mov r3, r6
+		b gameOver
+
+	gameOver:
 		bl printf
 		bl play_again
 
 		cmp r1, #'Y'
-		beq doWhile_r12_eq_Y
+		beq playGame
 		cmp r1, #'y'
-		beq doWhile_r12_eq_Y
+		beq playGame
 
-end:
+endGame:
 	pop {pc}
 	mov pc, lr
 
