@@ -1,7 +1,7 @@
 	.data
-msgTurnCounter: .asciz "\n\n                  Turn %d / 14\n================================================\n"
-msgGuessStats:  .asciz "\n# in Correct Position        # in Wrong Position\n---------------------        -------------------\n          %d                           %d\n\n"
-msgGetGuess:    .asciz "Enter code %d: "
+msgTurnCounter: .asciz "    Turn %d/8\n\n"
+msgGuessStats:  .asciz "=================\n    # correct: %d\n  # incorrect: %d\n\n-----------------\n\n"
+msgGetGuess:    .asciz " Enter code %d: "
 guessFormat:    .asciz "%d"
 
 	.text
@@ -9,24 +9,27 @@ guessFormat:    .asciz "%d"
 playTurn:
 	push {lr}
 
-	bl resetCounters
+	bl resetGuessCounters
 	bl displayTurnNumber
 	bl getGuessesFromPlayer
 	bl compareGuessWithCode
-	bl setCorrectAndIncorrectCounters
+	bl setGuessCounters
 	bl displayGuessStats
+	bl incrementTotalCorrect
 	bl incrementTurnCounter
 
 	pop {pc}
 	mov pc, lr
 
-resetCounters:
+resetGuessCounters:
 	push {lr}
 
 	mov r0, #0
-	ldr r1, =numberGuessedCorrectly
+
+	ldr r1, =correctCounter
 	str r0, [r1]
-	ldr r1, =numberGuessedIncorrectly
+
+	ldr r1, =incorrectCounter
 	str r0, [r1]
 
 	pop {pc}
@@ -49,7 +52,6 @@ getGuessesFromPlayer:
 	sub sp, sp, #4
 	mov r4, #0		@@ Memory address pointer for array
 	mov r5, #1		@@ For the %d in msgGetGuess
-
 	getGuess:
 		ldr r0, =msgGetGuess
 		mov r1, r5
@@ -62,6 +64,11 @@ getGuessesFromPlayer:
 		ldr r0, =arrayOfGuesses
 		ldr r1, [sp]
 		str r1, [r0, r4, lsl #2]
+
+		ldr r0, =totalGuesses
+		ldr r1, [r0]
+		add r1, r1, #1
+		str r1, [r0]
 
 		add r5, r5, #1
 		add r4, r4, #1
@@ -100,27 +107,42 @@ compareGuessWithCode:
 	pop {r4, r5, r6, lr}
 	mov pc, lr
 
-setCorrectAndIncorrectCounters:
-	push {r4, r5, lr}
+setGuessCounters:
+	push {r4, lr}
 
-	ldr r3, =numberGuessedCorrectly
-	ldr r4, =numberGuessedIncorrectly
+	ldr r3, =correctCounter
+	ldr r4, =incorrectCounter
 	str r1, [r3]
 	str r2, [r4]
 
-	ldr r0, =totalCorrect
-	ldr r5, [r0]
-	add r5, r5, r1
-	str r5, [r0]
-
-	pop {r4, r5, lr}
+	pop {r4, lr}
 	mov pc, lr
 
 displayGuessStats:
 	push {lr}
 
+	ldr r2, =incorrectCounter
+	ldr r2, [r2]
+	ldr r1, =correctCounter
+	ldr r1, [r1]
 	ldr r0, =msgGuessStats
 	bl printf
+
+	pop {pc}
+	mov pc, lr
+
+incrementTotalCorrect:
+	push {lr}
+
+	ldr r0, =totalCorrect
+	ldr r0, [r0]
+	ldr r1, =correctCounter
+	ldr r1, [r1]
+
+	add r0, r0, r1
+
+	ldr r1, =totalCorrect
+	str r0, [r1]
 
 	pop {pc}
 	mov pc, lr

@@ -1,6 +1,4 @@
 	.data
-	.global print
-printCodes: .asciz "%d %d %d\n"
 
 	.global arrayOfCodes
 .align 4
@@ -10,32 +8,30 @@ arrayOfCodes: .skip 16
 .align 4
 arrayOfGuesses: .skip 16
 
-	.global numberGuessedCorrectly
+	.global correctCounter
 .align 4
-numberGuessedCorrectly: .word 0
+correctCounter: .word 0
 
-	.global numberGuessedIncorrectly
+	.global incorrectCounter
 .align 4
-numberGuessedIncorrectly: .word 0
+incorrectCounter: .word 0
 
 	.global turnCounter
 .align 4
-turnCounter: .word 1
+turnCounter: .word 0
 
 	.global totalGuesses
 .align 4
-totalGuesses: .word 42
+totalGuesses: .word 0
 
 	.global totalCorrect
 .align 4
 totalCorrect: .word 0
-.align 4
-printNum: .asciz "%d\n"
 
-.align 4
-randomNum: .word 0
+printCodes: .asciz "\n    <DEMO: The code is %d %d %d>\n\n"
 
 	.text
+
 	.global initGame
 initGame:
 	push {lr}
@@ -46,6 +42,7 @@ initGame:
 
 	bl fillCodeArray
 	bl initTurnCounter
+	bl initTotalGuesses
 	bl initTotalCorrect
 	bl testPrint
 
@@ -80,6 +77,16 @@ initTurnCounter:
 	mov r0, #1
         ldr r1, =turnCounter
         str r0, [r1]
+
+	pop {pc}
+	mov pc, lr
+
+initTotalGuesses:
+	push {lr}
+
+	mov r0, #0
+	ldr r1, =totalGuesses
+	str r0, [r1]
 
 	pop {pc}
 	mov pc, lr
