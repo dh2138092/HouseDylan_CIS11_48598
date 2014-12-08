@@ -55,24 +55,3 @@ main:
 exit:
 	pop {r4, pc}
 	mov pc, lr
-/*
-promptNewGame:
-	push {r4, lr}
-	sub sp, sp, #4
-
-	ldr r0, =msgPlayAgain
-	bl printf
-
-	ldr r0, =fmtPlayAgain
-	mov r1, sp
-	bl scanf
-
-	ldr r0, [sp]
-
-	@ldr r0, =newline
-	@bl printf
-
-	add sp, sp, #4
-	pop {r4, pc}
-	mov pc, lr
-*/
