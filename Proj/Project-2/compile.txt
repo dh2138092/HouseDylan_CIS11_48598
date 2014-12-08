@@ -1,0 +1,4 @@
+
+@@ Open in Vim and copy/paste this into cmd line to compile and run the game
+
+gcc -c division.s; gcc -c initialize.s; gcc -c main.s; gcc -c turn.s; gcc -c printAvgCorrect.s; gcc -c promptNewGame.s; gcc division.o initialize.o main.o turn.o printAvgCorrect.o promptNewGame.o -o mastermind; ./mastermind
