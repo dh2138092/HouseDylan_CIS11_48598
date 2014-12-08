@@ -2,9 +2,6 @@
 msgWelcome:    .asciz "\n\n            M A S T E R M I N D ! ! !\n\nCreated by Dylan House, CIS-11-48598\n\nCrack the numerical code to win!\n\n\n***********************************************\n\nGAME RULES:\n\n1. The code is 3 digits long, with each digit\n   being between the numbers 0 thru 7.\n\n2. You have 8 guesses to crack the code.\n\n3. Enter one number at a time.\n\n		Good luck!\n\n***********************************************\n\n"
 msgWin:        .asciz "You win!!\n\n"
 msgLose:       .asciz "You lose! The correct code was %d %d %d\n\n"
-@msgPlayAgain:  .asciz "Do you want to play again? (Y/N)  "
-@fmtPlayAgain:  .asciz " %c"
-@newline:       .asciz "\n"
 
 	.text
 	.global main
