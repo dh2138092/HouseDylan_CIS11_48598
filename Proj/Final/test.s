@@ -4,7 +4,7 @@ msg1: .asciz "Enter an integer:"
 msg2: .asciz "The integer you enter is: %d\n"
 msg3: .asciz "The floating number is: %f\n"
 scan_format: .asciz "%d"
-integer: .word 0
+integer: .word 4
 dividend: .word 15
 
 .text
@@ -12,16 +12,16 @@ dividend: .word 15
 main:
 @	push {lr}
 
-        ldr r0, =msg1
-        bl printf
-        ldr r0, =scan_format
-        ldr r1, addr_integer
-        bl scanf
+  @      ldr r0, =msg1
+   @     bl printf
+@        ldr r0, =scan_format
+ @       ldr r1, addr_integer
+  @      bl scanf
 
-        ldr r0, =msg2
-        ldr r1, addr_integer
-        ldr r1, [r1]
-        bl printf
+   @     ldr r0, =msg2
+    @    ldr r1, addr_integer
+     @   ldr r1, [r1]
+      @  bl printf
 
         ldr r0, =integer
         ldr r0, [r0] /* load register1 the content of address */
@@ -46,6 +46,3 @@ main:
 
 @	pop {pc}
 @	mov pc, lr
-addr_integer: .word integer
-.global printf
-.global scanf
